@@ -26,16 +26,21 @@ namespace NetworkProgrammingP12
     {
         private Random random = new();
         private IPEndPoint? endPoint;
+        private DateTime lastSyncMoment;
+        private bool isServerOn;
 
         public ClientWindow()
         {
             InitializeComponent();
+            lastSyncMoment = default;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             LoginTextBox.Text = "User " + random.Next(100);
             MessageTextBox.Text = "Hello, all!";
+            isServerOn = true;
+            Sync();
         }
 
         private void SendButton_Click(object sender, RoutedEventArgs e)
@@ -46,13 +51,50 @@ namespace NetworkProgrammingP12
                 endPoint = new(
                                 IPAddress.Parse(adress[0]),
                                 Convert.ToInt32(adress[1]));
-                new Thread(SendMessage).Start(new ClientRequest { Command = "Message", Data = LoginTextBox.Text + ": " + MessageTextBox.Text });
+                new Thread(SendMessage).Start(new ClientRequest 
+                    { 
+                    Command = "Message",
+                    Message = new()
+                    {
+                        Login = LoginTextBox.Text,
+                        Text = MessageTextBox.Text
+                    }
+                });
             }
             catch(Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }            
         }
+
+        private async void Sync()
+        {
+            if (isServerOn)
+            {
+                String[] adress = HostTextBox.Text.Split(':');
+                try
+                {
+                    endPoint = new(
+                                    IPAddress.Parse(adress[0]),
+                                    Convert.ToInt32(adress[1]));
+                    new Thread(SendMessage).Start(new ClientRequest
+                    {
+                        Command = "Check",
+                        Message = new()
+                        {
+                            Moment = lastSyncMoment
+                        }
+                    });
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }                
+            }
+            await Task.Delay(1000);
+            Sync();
+        }
+
 
         private void SendMessage(Object? arg)
         {
@@ -62,9 +104,11 @@ namespace NetworkProgrammingP12
                 return;
             }
             Socket clientSocket = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
             try
             {
                 clientSocket.Connect(endPoint);
+                isServerOn = true;
                 clientSocket.Send(
                     Encoding.UTF8.GetBytes(JsonSerializer.Serialize(clientRequest)));
 
@@ -84,19 +128,35 @@ namespace NetworkProgrammingP12
                 }
                 else
                 {
-                    str = response.Status;
+                    str = "";
+                    if(response.Messages != null)
+                    {
+                        foreach (var message in response.Messages)
+                        {
+                            str += message + "\n";
+                            if(message.Moment > lastSyncMoment)
+                            {
+                                lastSyncMoment = message.Moment;
+                            }
+                        }
+                    }
                 }
 
-                Dispatcher.Invoke(() => ClientLog.Text += str + "\n");
+                Dispatcher.Invoke(() => ClientLog.Text += str);
 
                 clientSocket.Shutdown(SocketShutdown.Both);
                 clientSocket.Dispose();
             }
             catch(Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                if (isServerOn)
+                {
+                    isServerOn = false;
+                    clientSocket.Dispose();
+                    MessageBox.Show(ex.Message);
+                    isServerOn = true;
+                }                
             }
         }
-
     }
 }

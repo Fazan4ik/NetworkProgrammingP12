@@ -48,11 +48,11 @@
             </Grid>
 
             <DockPanel VerticalAlignment="Stretch" Grid.Column="1">
-                <Label Content="Вимкнуто"  DockPanel.Dock="Top"
+            <Label Content="Info"  DockPanel.Dock="Top"
                    HorizontalContentAlignment="Center"
-                   Background="Pink"
-                   x:Name="StatusLabel"/>
-                <Button Content="Надіслати"
+                   Background="LightGray"
+                   x:Name="StatusLabel" Margin="5 5 5 5"/>
+            <Button Content="Надіслати"
                     VerticalContentAlignment="Center"
                     x:Name="SendButton" Click="SendButton_Click"/>
             </DockPanel>

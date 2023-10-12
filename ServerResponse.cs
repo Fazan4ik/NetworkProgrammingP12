@@ -9,7 +9,6 @@ namespace NetworkProgrammingP12
     public class ServerResponse
     {
         public String Status { get; set; }
-        public String Data { get; set; }
-
+        public IEnumerable<ChatMessage>? Messages { get; set; }
     }
 }
