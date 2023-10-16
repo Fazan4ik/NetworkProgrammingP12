@@ -1,0 +1,29 @@
+﻿<Window x:Class="NetworkProgrammingP12.EmailWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NetworkProgrammingP12"
+        mc:Ignorable="d"
+        Title="EmailWindow" Height="600" Width="800" Background="Tomato">
+    <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Horizontal">
+            <Label Content="Кому: " FontSize="20" Margin="5 5 5 5"/>
+            <TextBox x:Name="textBoxTo" Text="jagannath2006@outlook.com" FontSize="20" Margin="5 5 5 5"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Label Content="Тема: " FontSize="20" Margin="5 5 5 5"/>
+            <TextBox x:Name="textBoxSubject" Text="Hello from WPF" FontSize="20" Margin="5 5 5 5"/>
+        </StackPanel>
+        
+        <TextBox x:Name="textBoxMessage" Text="Hello WPF how you" TextWrapping="Wrap" FontSize="20" Margin="5 5 5 5"/>
+        <StackPanel Orientation="Horizontal" >
+            <Button x:Name="SendButton1" Content="Надіслати" FontSize="20" Margin="5 5 5 5" Click="SendButton1_Click"/>
+        </StackPanel>
+
+        <TextBox x:Name="textBoxHTML" Text="&lt;h2>Добрий день,Єгор!&lt;/h2> Вас вітає програма &lt;b style='color:tomato'>автоматичного&lt;/b> надсилання листів" TextWrapping="Wrap" FontSize="20" Margin="5 5 5 5"/>
+        <StackPanel Orientation="Horizontal" >
+            <Button x:Name="SendButton2" Content="Надіслати" FontSize="20" Margin="5 5 5 5" Click="SendButton2_Click"/>
+        </StackPanel>
+    </StackPanel>
+</Window>

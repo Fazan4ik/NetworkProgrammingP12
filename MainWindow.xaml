@@ -14,6 +14,9 @@
                 <Button x:Name="ClientButton" Content="Client" FontSize="20" Margin="5 5 5 5" Click="ClientButton_Click"/>
             </UniformGrid>
         </GroupBox>
+        <StackPanel Orientation="Horizontal">
+            <Button x:Name="EmailButton" Content="Email SMTP" FontSize="20" Margin="5 5 5 5" Click="EmailButton_Click"/>
+        </StackPanel>
 
 
     </StackPanel>

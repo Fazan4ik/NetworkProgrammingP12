@@ -1,3 +1,9 @@
 {
-  
+  "smtp": {
+    "host": "smtp.gmail.com",
+    "port": "587",
+    "email": "egorsafuanovwork@gmail.com",
+    "password": "ecedfurhycxabote",
+    "ssl": "true"
+  }
 }

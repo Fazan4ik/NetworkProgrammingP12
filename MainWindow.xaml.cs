@@ -23,6 +23,7 @@ namespace NetworkProgrammingP12
         public MainWindow()
         {
             InitializeComponent();
+            // MessageBox.Show(App.GetConfiguration("smtp:host"));
         }
 
         private void Server_Click(object sender, RoutedEventArgs e)
@@ -33,6 +34,11 @@ namespace NetworkProgrammingP12
         private void ClientButton_Click(object sender, RoutedEventArgs e)
         {
             new ClientWindow().Show();
+        }
+
+        private void EmailButton_Click(object sender, RoutedEventArgs e)
+        {            
+            new EmailWindow().ShowDialog();            
         }
     }
 }

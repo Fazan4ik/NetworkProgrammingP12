@@ -96,7 +96,7 @@ namespace NetworkProgrammingP12
         }
 
 
-        private void SendMessage(Object? arg)
+        private async void SendMessage(Object? arg)
         {
             var clientRequest = arg as ClientRequest;
             if (endPoint == null || clientRequest == null)
@@ -125,12 +125,21 @@ namespace NetworkProgrammingP12
                 if (response == null)
                 {
                     str = "JSON Error in " + str;
+                    Dispatcher.Invoke(() => {
+                        StatusLabel.Background = Brushes.Pink;
+                        StatusLabel.Content = "Помилка";
+                    });
+                    await Task.Delay(3000);
+                    Dispatcher.Invoke(() => {
+                        StatusLabel.Background = Brushes.LightGray;
+                        StatusLabel.Content = "Info";
+                    });
                 }
                 else
                 {
-                    str = "";
-                    if(response.Messages != null)
-                    {
+                    str = "";                    
+                    if (response.Messages != null)
+                    {                        
                         foreach (var message in response.Messages)
                         {
                             str += message + "\n";
@@ -141,7 +150,19 @@ namespace NetworkProgrammingP12
                         }
                     }
                 }
-
+                if (str != "")
+                {
+                    Dispatcher.Invoke(() => {
+                        StatusLabel.Background = Brushes.LightGreen;
+                        StatusLabel.Content = "Відправлено";
+                    });
+                    await Task.Delay(3000);
+                    Dispatcher.Invoke(() => {
+                        StatusLabel.Background = Brushes.LightGray;
+                        StatusLabel.Content = "Info";
+                    });
+                }
+               
                 Dispatcher.Invoke(() => ClientLog.Text += str);
 
                 clientSocket.Shutdown(SocketShutdown.Both);
