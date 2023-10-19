@@ -137,12 +137,16 @@ namespace NetworkProgrammingP12
                 }
                 else
                 {
-                    str = "";                    
+                    str = "";
+                    DateTime currentDate;
+                    string dateString;
                     if (response.Messages != null)
                     {                        
                         foreach (var message in response.Messages)
                         {
-                            str += message + "\n";
+                            currentDate = DateTime.Now;
+                            dateString = currentDate.ToString("dd.MM.yyyy: HH:mm:ss: ");
+                            str +=  dateString + message + "\n";
                             if(message.Moment > lastSyncMoment)
                             {
                                 lastSyncMoment = message.Moment;

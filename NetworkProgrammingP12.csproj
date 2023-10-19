@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="email-settings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
