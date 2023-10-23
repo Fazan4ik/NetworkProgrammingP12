@@ -9,6 +9,8 @@
     <StackPanel Orientation="Vertical">
         <StackPanel Orientation="Horizontal">        
             <Button x:Name="get1Button" Content="GET" Margin="5 5 5 5" FontSize="20" Click="get1Button_Click"/>
+            <Button x:Name="ratesXMLButton" Content="XML" Margin="5 5 5 5" FontSize="20" Click="ratesXMLButton_Click"/>
+            <Button x:Name="ratesJSONButton" Content="Json" Margin="5 5 5 5" FontSize="20" Click="ratesJSONButton_Click"/>
             <Button x:Name="ratesButton" Content="Rates" Margin="5 5 5 5" FontSize="20" Click="ratesButton_Click"/>
             <Button x:Name="popularButton" Content="Popular" Margin="5 5 5 5" FontSize="20" Click="popularButton_Click"/>
         </StackPanel>

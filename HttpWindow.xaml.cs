@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -42,6 +43,38 @@ namespace NetworkProgrammingP12
             }
             String body = await response.Content.ReadAsStringAsync();
             textBlock1.Text += $"\r\n{body}";
+        }
+
+
+
+
+        private async void ratesXMLButton_Click(object sender, RoutedEventArgs e)
+        {
+            using HttpClient httpClient = new();
+            var response = await httpClient.GetAsync("https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange");
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                string content = await response.Content.ReadAsStringAsync();
+                textBlock1.Text = content + "\r\n";
+            }
+            else
+            {
+                MessageBox.Show($"Error: {(int)response.StatusCode} {response.ReasonPhrase}\r\n");
+            }
+        }
+        private async void ratesJSONButton_Click(object sender, RoutedEventArgs e)
+        {
+            using HttpClient httpClient = new();
+            var response = await httpClient.GetAsync("https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json");
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                string content = await response.Content.ReadAsStringAsync();
+                textBlock1.Text = content + "\r\n";
+            }
+            else
+            {
+                MessageBox.Show($"Error: {(int)response.StatusCode} {response.ReasonPhrase}\r\n");
+            }
         }
 
         private async void ratesButton_Click(object sender, RoutedEventArgs e)
