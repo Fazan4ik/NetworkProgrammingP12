@@ -19,7 +19,7 @@ namespace NetworkProgrammingP12
         private static JsonElement? settings = null;
         public static String? GetConfiguration(String name)
         {
-            if (settings==null)
+            if (settings == null)
             {
                 if (!File.Exists(configFilename))
                 {
@@ -32,8 +32,9 @@ namespace NetworkProgrammingP12
                 }
             }
 
-            try { 
-                settings ??= JsonSerializer.Deserialize<JsonElement>(File.ReadAllText(configFilename)); 
+            try
+            {
+                settings ??= JsonSerializer.Deserialize<JsonElement>(File.ReadAllText(configFilename));
             }
             catch
             {
