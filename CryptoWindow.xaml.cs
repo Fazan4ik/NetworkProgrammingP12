@@ -60,9 +60,9 @@ namespace NetworkProgrammingP12
         }
         private void ListViewItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (sender in ListViewItem item){
+           /* if (sender in ListViewItem item){
                 item.Background = Brushes.Aqua;
-            }
+            }*/
         }
     }
 

@@ -114,11 +114,15 @@ namespace NetworkProgrammingP12
             {
                 IsBodyHtml = true,
             };
-            ContentType gifType = new ContentType("image/gif");
+            /*ContentType gifType = new ContentType("image/gif");
             mailMessage.Attachments.Add(new Attachment("TfNy.gif",gifType));
 
             ContentType mp3Type = new ContentType("audio/mp3");
-            mailMessage.Attachments.Add(new Attachment("sabaton-the-red-baron.mp3", mp3Type));
+            mailMessage.Attachments.Add(new Attachment("sabaton-the-red-baron.mp3", mp3Type));*/
+            ContentType txtType = new("text/plain");
+            mailMessage.Attachments.Add(new Attachment("privacy.txt", txtType));
+            ContentType docxType = new("docx/plain");
+            mailMessage.Attachments.Add(new Attachment("privacy-policy-template.docx", txtType));
 
             smtpClient.Send(mailMessage);
             MessageBox.Show("Надіслано");
