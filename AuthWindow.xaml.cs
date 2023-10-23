@@ -31,23 +31,32 @@ namespace NetworkProgrammingP12
 
         private void SignupButton_Click(object sender, RoutedEventArgs e)
         {
-            using SqlConnection connection = new(ConnectionString);
-            connection.Open();
-            using SqlCommand command = connection.CreateCommand();
-            String code = Guid.NewGuid().ToString()[..6].ToUpper();
-            command.CommandText =
-                "INSERT INTO Users(Email, Password, ConfirmCode)" +
-                $" VALUES (N'{textboxEmail.Text}', N'{textboxPassword.Password}', '{code}')";
-            command.ExecuteNonQuery();
+            try
+            {
+                using SqlConnection connection = new(ConnectionString);
+                connection.Open();
 
-            using SmtpClient? smtpClient = GetSmtpClient();
-            smtpClient?.Send(
-                App.GetConfiguration("smtp:email")!,
-                textboxEmail.Text,
-                "Signup successfull",
-                $"Congratulations! To confirm Email use code: {code}"
-            );
-            MessageBox.Show("Chek Email");
+                using SqlCommand command = connection.CreateCommand();
+                string code = Guid.NewGuid().ToString()[..6].ToUpper();
+                command.CommandText = "INSERT INTO [Users](Email, Password, ConfirmCode) " +
+                                      $"VALUES(N'{textboxEmail.Text}', N'{textboxPassword.Password}', '{code}')";
+                command.ExecuteNonQuery();
+                using SmtpClient? smtpClient = GetSmtpClient();
+                if (smtpClient is null) { MessageBox.Show("Connection to smtp failed..."); return; }
+
+                MailMessage mailMessage = new MailMessage(
+                    App.GetConfiguration("smtp:email")!,
+                    textboxEmail.Text,
+                    "Sign up seccussfull",
+                    $"Congratulations! To confirm Email use code: <span style='color: tomato; font-weight: bold;'>{code}</span>"
+                )
+                { IsBodyHtml = true };
+
+                smtpClient.Send(mailMessage);
+
+                MessageBox.Show("Check Email");
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
         private SmtpClient? GetSmtpClient()
@@ -112,13 +121,16 @@ namespace NetworkProgrammingP12
             {
                 if (textboxCode.Text.Equals(savedCode))
                 {
-                    logBlock.Text += "Email  confirmed\n";
-                    /* Д.З. При правильному вводі коду підтвердження пошти
-                     * виконати SQL запит, який змінить значення ConfirmCode
-                     * на NULL, а також приховає "вікно" введення коду.
-                     * Перевірити, що повторному вході пошта вважається
-                     * підтвердженою
-                     */
+                    using SqlConnection connection = new(ConnectionString);
+                    connection.Open();
+
+                    using SqlCommand command = connection.CreateCommand();
+                    command.CommandText = $"UPDATE [Users] SET ConfirmCode = NULL " +
+                                          $"WHERE [Email] = '{textboxEmail.Text}' AND [Password] = '{textboxPassword.Password}'";
+                    command.ExecuteNonQuery();
+
+                    ConfirmContainer.Visibility = Visibility.Hidden;
+                    logBlock.Text += "Email confirmed!\n";
                 }
                 else
                 {
