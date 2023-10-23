@@ -24,12 +24,10 @@ namespace NetworkProgrammingP12
     public partial class AuthWindow : Window
     {
         private String ConnectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=""D:\visual studio projects\NetworkProgrammingP12\Database1.mdf"";Integrated Security=True";
-
         public AuthWindow()
         {
             InitializeComponent();
         }
-
 
         private void SignupButton_Click(object sender, RoutedEventArgs e)
         {
@@ -37,11 +35,12 @@ namespace NetworkProgrammingP12
             connection.Open();
             using SqlCommand command = connection.CreateCommand();
             String code = Guid.NewGuid().ToString()[..6].ToUpper();
-            command.CommandText = "INSERT INTO Users(Email, Password, ConfirmCode)" +
+            command.CommandText =
+                "INSERT INTO Users(Email, Password, ConfirmCode)" +
                 $" VALUES (N'{textboxEmail.Text}', N'{textboxPassword.Password}', '{code}')";
             command.ExecuteNonQuery();
 
-            using SmtpClient smtpClient = GetSmtpClient();
+            using SmtpClient? smtpClient = GetSmtpClient();
             smtpClient?.Send(
                 App.GetConfiguration("smtp:email")!,
                 textboxEmail.Text,
@@ -50,7 +49,6 @@ namespace NetworkProgrammingP12
             );
             MessageBox.Show("Chek Email");
         }
-
 
         private SmtpClient? GetSmtpClient()
         {
@@ -110,10 +108,17 @@ namespace NetworkProgrammingP12
 
         private void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
-            if(ConfirmContainer.Tag is String savedCode) {
-                if (savedCode.Equals(ConfirmContainer.Tag))
+            if (ConfirmContainer.Tag is String savedCode)
+            {
+                if (textboxCode.Text.Equals(savedCode))
                 {
-                    logBlock.Text += "Email confirmed\n";
+                    logBlock.Text += "Email  confirmed\n";
+                    /* Д.З. При правильному вводі коду підтвердження пошти
+                     * виконати SQL запит, який змінить значення ConfirmCode
+                     * на NULL, а також приховає "вікно" введення коду.
+                     * Перевірити, що повторному вході пошта вважається
+                     * підтвердженою
+                     */
                 }
                 else
                 {
@@ -122,7 +127,6 @@ namespace NetworkProgrammingP12
             }
         }
 
-
         private void SigninButton_Click(object sender, RoutedEventArgs e)
         {
             using SqlConnection connection = new(ConnectionString);
@@ -130,14 +134,14 @@ namespace NetworkProgrammingP12
             using SqlCommand command = connection.CreateCommand();
             command.CommandText = "SELECT * FROM [Users] WHERE " +
                 $" [Email]=N'{textboxEmail.Text}' " +
-                $" AND [Password]=N'{textboxPassword.Password}'";
+                $" AND [Password]=N'{textboxPassword.Password}' ";
             using SqlDataReader reader = command.ExecuteReader();
-            if (reader.Read())
+            if (reader.Read())  // Користувач знайдений
             {
-                if (reader.IsDBNull("ConfirmCode"))
+                if (!reader.IsDBNull("ConfirmCode"))   // код не NULL - не підтверджений
                 {
                     String code = reader.GetString("ConfirmCode");
-                    ConfirmContainer.Visibility = Visibility.Collapsed;
+                    ConfirmContainer.Visibility = Visibility.Visible;
                     ConfirmContainer.Tag = code;
                     textboxCode.Focus();
                     logBlock.Text += "Welcome, Email needs confirmation\n";
@@ -147,7 +151,7 @@ namespace NetworkProgrammingP12
                     logBlock.Text += "Welcome, Email confirmed\n";
                 }
             }
-            else
+            else  // Неправильні логін/пароль
             {
                 MessageBox.Show("Credentials incorrect");
             }

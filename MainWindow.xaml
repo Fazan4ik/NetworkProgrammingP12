@@ -18,7 +18,11 @@
             <Button x:Name="EmailButton" Content="Email SMTP" FontSize="20" Margin="5 5 5 5" Click="EmailButton_Click"/>
             <Button x:Name="ConfirmButton" Content="ConfirmButton" FontSize="20" Margin="5 5 5 5" Click="ConfirmButton_Click"/>
         </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button x:Name="HttpButton" Content="HTTP" FontSize="20" Margin="5 5 5 5" Click="HttpButton_Click"/>
+            <Button x:Name="CryptoButton" Content="Crypto" FontSize="20" Margin="5 5 5 5" Click="CryptoButton_Click"/>
 
+        </StackPanel>
 
     </StackPanel>
 </Window>

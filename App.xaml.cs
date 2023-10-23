@@ -19,9 +19,9 @@ namespace NetworkProgrammingP12
         private static JsonElement? settings = null;
         public static String? GetConfiguration(String name)
         {
-            if (settings == null)
+            if (settings==null)
             {
-                if (!System.IO.File.Exists(configFilename))
+                if (!File.Exists(configFilename))
                 {
                     MessageBox.Show(
                         $"Файл конфігурації '{configFilename}' не знайдено",
@@ -30,14 +30,19 @@ namespace NetworkProgrammingP12
                         MessageBoxImage.Error);
                     return null;
                 }
-                /* Реалізувати перевірку файлу конфігурації на 
-                 * правильну структуру (можливість парсингу JSON).
-                 * За наявності відхилень видавати повідомлення
-                 * на кшталт "Файл конфігурації має неправильну
-                 * структуру або пошкоджений"
-                 */
-                settings = JsonSerializer.Deserialize<JsonElement>(
-                    System.IO.File.ReadAllText(configFilename));
+            }
+
+            try { 
+                settings ??= JsonSerializer.Deserialize<JsonElement>(File.ReadAllText(configFilename)); 
+            }
+            catch
+            {
+                MessageBox.Show(
+                        $"Файл конфігурації '{configFilename}' не підходить або зломан.",
+                        "Операція не може бути завершена",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                return null;
             }
 
             JsonElement? jsonElement = settings;
