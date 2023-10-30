@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:NetworkProgrammingP12"
         mc:Ignorable="d"
         Loaded="Window_Loaded"
-        Title="CryptoWindow" Height="450" Width="800">
+        Title="CryptoWindow" Height="600" Width="1000">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
@@ -17,10 +17,11 @@
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
 
-        <Label Content="Графіки курсів криптовалют" Background="Tan"
+        <Label x:Name="LabelCourse"
+               Content="Графіки курсів криптовалют" 
                FontSize="22" FontWeight="DemiBold"
                HorizontalContentAlignment="Center"
-               Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"/>
+               Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Background="Tan"/>
 
         <ListView ItemsSource="{Binding CoinsData}" Grid.Row="1" Grid.Column="0">
             <ListView.ItemTemplate>
@@ -31,12 +32,12 @@
             <ListView.Resources>
                 <Style TargetType="ListViewItem">
                     <EventSetter Event="MouseDoubleClick" 
-                     Handler="ListViewItem_MouseDoubleClick"/>
+                                 Handler="FrameworkElement_MouseLeftButtonDown"/>
                 </Style>
             </ListView.Resources>
         </ListView>
 
-        <Canvas Grid.Row="1" Grid.Column="1" Background="Tomato"/>
+        <Canvas x:Name="Graph" Grid.Row="1" Grid.Column="1" Background="Tomato"/>
 
     </Grid>
 </Window>
