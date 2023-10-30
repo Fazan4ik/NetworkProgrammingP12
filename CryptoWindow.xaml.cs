@@ -94,7 +94,7 @@ namespace NetworkProgrammingP12
                 MessageBox.Show("Помилка завантаження данних");
                 return;
             }
-            double yOffset = 30;
+            double yOffset = 40;
             double graphH = Graph.ActualHeight - yOffset;
 
             long minTime, maxTime;
@@ -130,6 +130,14 @@ namespace NetworkProgrammingP12
                 y0 = y;
             }
             DrawLine(0, graphH, Graph.ActualWidth, graphH);
+
+            DrawLabel(0, graphH + 5, minTime, Brushes.DarkRed, true);
+            DrawLabel(0, graphH + 20, minPrice, Brushes.Red);
+
+            DrawLabel(Graph.ActualWidth - 60, graphH + 5, maxTime, Brushes.DarkGreen, true);
+            DrawLabel(Graph.ActualWidth - 60, graphH + 20, maxPrice, Brushes.Green);
+
+
         }
 
         private void DrawLine(double x1,double y1,double x2,double y2, Brush brush = null)
@@ -145,10 +153,33 @@ namespace NetworkProgrammingP12
                 StrokeThickness = 2
             });
         }
+        private void DrawLabel(double x, double y, double value, Brush brush = null, bool isDate = false)
+        {
+            string formattedText = isDate ?
+                new DateTime(1970, 1, 1, 0, 0, 0).AddSeconds(value / 1000).ToString("dd.MM.yyyy") :
+                value.ToString("F2"); 
+
+            brush ??= Brushes.Black;
+
+            TextBlock textBlock = new TextBlock
+            {
+                Text = formattedText,
+                Foreground = brush,
+                FontWeight = FontWeights.Bold,
+                TextAlignment = TextAlignment.Center
+            };
+
+            Canvas.SetLeft(textBlock, x);
+            Canvas.SetTop(textBlock, y);
+            Graph.Children.Add(textBlock);
+        }
+
+
+
     }
 
     ///////////////// ORM ////////////////////////
-    
+
     public class HistoryResponse
     {
         public List<HistoryItem> data { get; set; }
